@@ -5,11 +5,12 @@ jobs:
    check-bats-version:
      runs-on: ubuntu-latest
      steps:
-       - uses: actions/checkout@v4       
-       - uses: ./.github/actions/hello-world-action
+       - uses: actions/checkout@v4              
        - uses: actions/setup-node@v4
          with:
            node-version: '20'
+       - name: Use local hello-world-action
+         uses: ./.github/actions/hello-world-action
        - run: npm install -g bats
        - run: bats -v       
 
