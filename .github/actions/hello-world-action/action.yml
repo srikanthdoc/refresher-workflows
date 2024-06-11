@@ -1,5 +1,10 @@
-jobs:
-  my_first_job:
-    steps:
-      - name: My first step
-        uses: actions/setup-node@v4
+name: Test
+description: 'composite run action'
+
+runs:
+  using: "composite"
+  steps: 
+    - name: Echo
+      shell: bash
+      run: |
+        echo Heyyyyy
