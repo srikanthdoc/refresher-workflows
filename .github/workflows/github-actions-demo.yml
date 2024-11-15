@@ -23,7 +23,7 @@ jobs:
             files_json="[]"
           else
             # Convert newline-separated files to a JSON array
-            files_json=$(echo "$files" | jq -R -s 'split("\n") | map(select(. != ""))')
+            files_json=$(echo "$files" | jq -R -s 'split("\n") | map(select(. != "")) | .[] |= ltrimstr(" ") | .[] |= rtrimstr(" ") | .')
           fi
           
           echo files_json
