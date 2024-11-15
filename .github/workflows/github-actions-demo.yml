@@ -18,16 +18,25 @@ jobs:
         run: |
           # Find all files with 'Docker' in their name
           files=$(find . -name "*Docker*")
-          # Convert newline-separated files to a JSON array
           if [ -z "$files" ]; then
             files_json="[]"
           else
-            # Convert newline-separated files to a JSON array
-            files_json=$(echo "$files" | jq -R -s 'split("\n") | map(select(. != "")) | .[] |= ltrimstr(" ") | .[] |= rtrimstr(" ") | .')
+            # Convert newline-separated files to a JSON array, trim spaces, and avoid invalid entries
+            files_json=$(echo "$files" | jq -R -s 'split("\n") | map(select(. != "")) | map(trim)')
           fi
+
+          echo "JSON Array of Dockerfiles: $files_json"  # Debug output
           
-          echo files_json
-          echo "docker_files=$files_json" >> $GITHUB_ENV    
+          # Write to $GITHUB_ENV with valid JSON
+          echo "docker_files=$files_json" >> $GITHUB_ENV
+          
+          # Deprecated output for older workflows (optional)
+          echo "::set-output name=docker_files::$files_json"
+          
+      - name: Debug Output
+        run: |
+          echo "Docker files: ${{ steps.find_files.outputs.docker_files }}"
+  
               
 
   build_push:
