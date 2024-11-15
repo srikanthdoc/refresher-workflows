@@ -21,8 +21,8 @@ jobs:
           if [ -z "$files" ]; then
             files_json="[]"
           else
-            # Convert newline-separated files to a JSON array, trim spaces, and avoid invalid entries
-            files_json=$(echo "$files" | jq -R -s 'split("\n") | map(select(. != "")) | map(trim)')
+            # Convert newline-separated files to a JSON array and clean up spaces
+            files_json=$(echo "$files" | jq -R -s 'split("\n") | map(select(. != "")) | map(ltrimstr(" ") | rtrimstr(" "))')
           fi
 
           echo "JSON Array of Dockerfiles: $files_json"  # Debug output
@@ -36,6 +36,7 @@ jobs:
       - name: Debug Output
         run: |
           echo "Docker files: ${{ steps.find_files.outputs.docker_files }}"
+
   
               
 
