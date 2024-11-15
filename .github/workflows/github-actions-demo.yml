@@ -19,10 +19,16 @@ jobs:
           # Find all files with 'Docker' in their name
           files=$(find . -name "*Docker*")
           # Convert newline-separated files to a JSON array
-          files_json=$(jq -nc --arg files "$files" '$files | split("\n") | map(select(. != ""))')
+          if [ -z "$files" ]; then
+            files_json="[]"
+          else
+            # Convert newline-separated files to a JSON array
+            files_json=$(echo "$files" | jq -R -s 'split("\n") | map(select(. != ""))')
+          fi
           
-          echo $files_json
-          echo "docker_files=$files_json" >> $GITHUB_ENV
+          echo files_json
+          echo "docker_files=$files_json" >> $GITHUB_ENV    
+              
 
   build_push:
     runs-on: ubuntu-latest    
