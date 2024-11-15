@@ -22,7 +22,7 @@ jobs:
           # Convert newline-separated files to a JSON array
           files_json=$(jq -nc --arg files "$files" '$files | split("\n") | map(select(. != ""))')
           
-          echo files_json
+          echo $files_json
           echo "docker_files=$files_json" >> $GITHUB_ENV
 
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
