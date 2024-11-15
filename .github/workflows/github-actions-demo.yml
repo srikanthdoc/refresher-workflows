@@ -7,7 +7,24 @@ on:
 jobs:
   Explore-GitHub-Actions:
     runs-on: ubuntu-latest
+    outputs:
+      docker_files: ${{ steps.find_files.outputs.docker_files }}
+
     steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Find Docker files
+        id: find_files
+        run: |
+          # Find all files with 'Docker' in their name
+          files=$(find . -name "*Docker*")
+          # Convert newline-separated files to a JSON array
+          files_json=$(jq -nc --arg files "$files" '$files | split("\n") | map(select(. != ""))')
+          
+          echo files_json
+          echo "docker_files=$files_json" >> $GITHUB_ENV
+
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
       - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
       - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
